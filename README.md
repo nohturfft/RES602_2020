@@ -8,6 +8,19 @@ St. George's University of London
 1. 25-Sep-20: Using the RStudio IDE  
 
 
+## Preparation for the workshop  
+
+### Installing R and RStudio  
+
+If you haven't already done so, [install first R](https://www.r-project.org/), then [RStudio](https://rstudio.com/products/rstudio/download/) on your computer. That way you can try out the code we'll cover during the practice breaks. Of course, you may choose to just follow the presentation.  
+
+### Accessing R/Rstudio Server  
+
+If you prefer to access RStudio Server online, please go to [https://stats3.sgul.ac.uk/rstudio/](https://stats3.sgul.ac.uk/rstudio/).  
+Note that you will need a good amount of disk space allowance for your H drive.  
+You might need to first connect to the university's VPN or open the tool on [mydesktop](mydesktop.sgul.ac.uk).  
+
+
 ## To create a copy of this repository in RStudio follow these steps:  
 
 1. Start RStudio  
