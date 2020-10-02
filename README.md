@@ -1,14 +1,20 @@
 # RES602 Experimental Design and Data Analysis R workshops 2020
 Axel Nohturfft  
 St. George's University of London  
-25-September-2020  
 
 ## Topics covered  
 
 1. 25-Sep-20: Using the RStudio IDE  
+2. 02-Oct-20:  
+   * Rmarkdown  
+   * R notebooks  
+   * Reading data from files  
+   * Reading data from the internet  
+   * Saving data frames as a text file  
+   * Plotting graphs  
 
 
-## Preparation for the workshop  
+## Preparation for the workshop (25-Sep-20)  
 
 ### Installing R and RStudio  
 
@@ -37,55 +43,9 @@ You might need to first connect to the university's VPN or open the tool on [myd
 We will be using a number of different R packages.  
 Please install these by running the following code from the command prompt (note: _**tidyverse includes 26 packages in total; so the installation may take a few minutes**_):  
 
-```
-install.packages("magrittr")
-install.packages("dplyr")
-install.packages("tidyr")
-install.packages("ggplot2")
-install.packages("rmarkdown")
-install.packages("esquisse")
-install.packages("knitr")
-install.packages("DT")
-```
+## Preparation for the workshop (02-Oct-20)  
 
-Alternatively, you can install packages using the RStudio `Tools > Install Packages...` menu.  
+Please start RSudio Server at [https://stats3.sgul.ac.uk/rstudio/](https://stats3.sgul.ac.uk/rstudio/).  
+Please the workshop session is not already open, go to the file Menu > Open > Open project ... then find a file called "RES602_2020.Rproj". If you can't find it anymore follow the steps described for the first workshop above.  
+Once the project is loaded go to the 'Git' tab in the top right RStudio window and click "Pull".  
 
-
-## Downloading Covid19 data from the internet  
-
-```
-# Define the URL  
-url.jh <- paste0("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/",
-                 "csse_covid_19_data/csse_covid_19_time_series/",
-                 "time_series_covid19_deaths_global.csv")
-
-# Download the data  
-df.jh.raw <- readr::read_csv(url.jh)
-
-# Have a look:
-head(df.jh.raw)
-
-# Save a local copy:
-write.table(df.jh.raw, sep="\t", file = "covid19_data_uk_raw.txt", row.names = F, col.names = T)
-```
-
-## Generate a plot from Covid19 data
-```
-```{r plot covid19}
-df.jh.processed <- df.jh.raw %>% 
-  dplyr::rename(Country="Country/Region") %>% 
-  dplyr::rename(Province="Province/State") %>% 
-  dplyr::filter(Country == "United Kingdom") %>% 
-  dplyr::filter(is.na(Province)) %>% 
-  dplyr::select(-Province, -Lat, -Long) %>% 
-  tidyr::pivot_longer(-Country, names_to = "Date", values_to = "Deaths") %>% 
-  dplyr::mutate(Date = lubridate::mdy(Date)) %>% 
-  dplyr::filter(Deaths > 0)
-
-gg <- ggplot2::ggplot(data=df.jh.processed, aes(x=Date, y=Deaths)) +
-  geom_line() + scale_y_log10() +
-  labs(title = "UK Deaths from Covid19",
-       subtitle = paste0("(Data: Johns Hopkins, ", max(df.jh.processed$Date), ")"))
-gg
-```
-```
