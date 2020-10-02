@@ -1,0 +1,283 @@
+---
+title: "Creating, reading and writing data frames"
+author: "Axel Nohturfft (anohturf@sgul.ac.uk)"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_notebook:
+    code_folding: show
+    fig_caption: yes
+    highlight: tango
+    number_sections: no
+    theme: sandstone
+    toc: yes
+    toc_depth: 3
+    toc_float: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+**_Please follow the instructions in the README file before starting this tutorial._**
+
+
+## Introduction  
+
+* Data frames are the most common data structure used in R.  
+* They are essentially similar to an Excel table, except that in a given column each value has to be of the same data type (e.g. character/text, numeric, logical/boolean). But different columns in one data frame can be of a different type.  
+* In R a data frame is similar to a _**matrix**_ but in a matrix all data have to be the same type.  
+* Generally, data frames are created when opening for example Excel or CSV files or when loading tabular data from the internet.  
+* In this script we will go through some examples.  
+
+## Code  
+```{r clean up memory, message=FALSE}
+# clear all variables that might be stored from a previous analysis:
+rm(list=ls(all=T))
+```
+
+### Load packages  
+R packages provide additional functions/commands.  
+
+* The '[magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html)' package provides pipes (%>%) that allow us to send the output from one command to the next  
+* We'll use functions from the '[readr](https://readr.tidyverse.org/)' package to open CSV and TSV files  
+* We'll use a function from the '[readxl](https://readxl.tidyverse.org/)' package to load data from an Excel file  
+* 'tidyr' is for "tidying up" (here: reshaping) data  
+* 'lubridate' is for working with dates  
+* 'ggplot2' is for plotting  
+* (All six of the above packages are part of the [tidyverse](https://www.tidyverse.org/) family of packages developed by the folks at RStudio).  
+* The '[DT](https://rstudio.github.io/DT/)' package will be used to display data frames as paged html tables.  
+```{r packages, message=FALSE}
+if (!require(magrittr)) install.packages("magrittr")
+if (!require(readr)) install.packages("readr")
+if (!require(readxl)) install.packages("readxl")
+if (!require(lubridate)) install.packages("lubridate")
+if (!require(ggplot2)) install.packages("ggplot2")
+if (!require(DT)) install.packages("DT")
+if (!require(knitr)) install.packages("knitr")
+if (!require(rmarkdown)) install.packages("rmarkdown")
+if (!require(esquisse)) install.packages("esquisse")
+library(magrittr)
+# help(package="magrittr")
+library(readr)
+# help(package="readr")
+library(readxl)
+# help(package="readxl")
+library(lubridate)
+# help(package="lubridate")
+library(ggplot2)
+# help(package="ggplot2")
+library(DT)
+# help(package="DT")
+library(esquisse)
+```
+
+### Reading data from a local file using RStudio  
+The most convenient way of loading tabular data from a local file is to use RStudio:  
+Open the 'Environment' window/tab, click 'Import dataset' then adjust the controls.  
+Be sure to copy the code and paste it into your script file for future reference.  
+
+### Read data from a local Excel file  
+* Here we use a function from the tidyverse 'readxl' package.  
+* The 'openxlsx' package is also a good option.  
+* The file is stored in a project sub-directory called 'data' (see RStudio Files window/tab)  
+
+```{r open xl}
+xl.file <- "data/qPCR_Cq_Results.xlsx"
+stopifnot(file.exists(xl.file))
+df.pcr <- readxl::read_xlsx(path=xl.file, sheet="Sheet1", col_names = T, range = "D1:H9")
+# If you get a strange error, make sure no rows or columns are hidden in the Excel file
+head(df.pcr)
+# options("esquisse.viewer" = "pane")
+# esquisser(df.pcr)
+# esquisser(iris)
+```
+
+To view the contents of the newly created data frame click on 'df.pcr' in the RStudio Environment window. If you then look at the console, you will see that RStudio responded by running the `View(df.pcr)` command. You can copy and paste that into your script if you would like to do this computationally in the future. Note that this output would not appear in the markdown output.  
+
+### Read data from a local tsv file  
+* TSV stands for 'tab-separated values'.  
+* Such files often just have a '.txt' extension.  
+* Here, we read a TSV file with a set of results from a multiple-choice exam  
+* If you open the file in Word or Excel, you woud see that the first few lines are comments preceded by hash (#) characters. The `comment="#"` argument in the `read_tsv()` call below tells R to ignore these lines.  
+* The `col_names=TRUE` argument indicates that the first line of the table represents column headers, not data.  
+
+```{r open tsv, message=FALSE}
+tsv.file <- "data/OSPE_Results_Raw.tsv"
+stopifnot(file.exists(tsv.file))
+df.results <- readr::read_tsv(file=tsv.file, col_names = TRUE, comment = "#")
+```
+
+
+### Read data from a local csv file  
+
+* CSV stands for 'comma-separated values'.  
+* Here, we open a file that lists the correct answers for a few questions from a multiple-choice exam
+
+```{r open csv, message=FALSE}
+csv.file <- "data/OSPE_Blueprint.csv"
+stopifnot(file.exists(csv.file))
+df.blueprint <- readr::read_csv(file=csv.file, col_names = TRUE, comment = "#")
+```
+
+
+### Loading data from the internet  
+The code below shows how to load data from a CSV file stored on the web.
+As an example we open the most recent Covid-19 stats from Johns Hopkins.  
+All we have to do is use the internet file URL instead of a local file path as argument to the `read_csv()` function.
+```{r load covid19, message=FALSE}
+url.jh <- paste0("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/",
+                 "csse_covid_19_data/csse_covid_19_time_series/",
+                 # "time_series_covid19_deaths_global.csv",
+                 "time_series_covid19_confirmed_global.csv")
+df.jh.raw <- readr::read_csv(url.jh)
+```
+
+```{r}
+plot(x=df.jh.raw$Lat, y=df.jh.raw$Long)
+```
+
+
+```{r}
+head(df.jh.raw)
+write.table(df.jh.raw, sep="\t", file = "covid19_data_uk_raw.txt", row.names = F, col.names = T)
+```
+
+
+Lets extract the UK data and display a graph (we'll discuss the dplyr functions later):  
+```{r plot covid19}
+df.jh.processed <- df.jh.raw %>% 
+  dplyr::rename(Country="Country/Region") %>% 
+  dplyr::rename(Province="Province/State") %>% 
+  dplyr::filter(Country == "United Kingdom") %>% 
+  dplyr::filter(is.na(Province)) %>% 
+  dplyr::select(-Province, -Lat, -Long) %>% 
+  tidyr::pivot_longer(-Country, names_to = "Date", values_to = "Cases") %>% 
+  dplyr::mutate(Date = lubridate::mdy(Date)) %>% 
+  dplyr::filter(Cases > 0)
+
+gg <- ggplot2::ggplot(data=df.jh.processed, aes(x=Date, y=Cases)) +
+  geom_line() + scale_y_log10() +
+  labs(title = "UK Covid19 Cases",
+       subtitle = paste0("(Data: Johns Hopkins, ", max(df.jh.processed$Date), ")"))
+gg
+```
+
+
+### Additional options for viewing the contents of a data frame  
+To display the blueprint table in the html output there are a number of options.  
+The simplest is to use the `print()` command:
+```{r print blueprint}
+# View(df.blueprint)
+print(df.blueprint)
+```
+
+To have a quick look at the first few rows of a data frame, use `head()`:  
+```{r head command}
+# By default head() prints 6 lines
+# Use head(df.results, n) to print n lines instead
+head(df.results)
+```
+
+For the last few lines use `tail()`:  
+```{r tail command}
+n <- 4
+tail(df.results, n)
+```
+
+
+There are a number of packages that allow you to generate very snazzy html tables.  
+My favourite is usually the `datatable` function from the DT package:  
+
+* long tables are paged  
+* tables are searchable  
+* you can choose how man rows to show on one 'page'  
+* there is an option to add hyperlinks to table text  
+* the package provides a very large number of customization options  
+* run `help(package="DT")` for access to more information  
+```{r}
+# DT::datatable(df.blueprint)
+df.blueprint
+```
+
+I encourage you to also check out the following packages that display information-rich, attractive html tables from Rmarkdown:  
+
+* [formattable](https://github.com/renkun-ken/formattable)  
+* [kable + kableExtra](http://haozhu233.github.io/kableExtra/awesome_table_in_html.html)  
+* [htmlTable](https://github.com/gforge/htmlTable)  
+
+### Dimensions of a data frame  
+For both number of rows and columns use `dim()`.  
+```{r}
+dim(df.blueprint)
+```
+
+For number of rows use `nrow()`  
+```{r}
+nrow(df.blueprint)
+```
+
+For number of columns use `ncol()`  
+```{r}
+ncol(df.blueprint)
+```
+
+### Saving a data frame  
+To save a data frame as a text file, either in comma-delimited (CSV) or tab-delimited (TSV) format, use the `write.table()` command:  
+
+```{r write CSV}
+# mtcars is a data frame that comes with R
+write.table(mtcars, file="mtcars.csv", sep=",", row.names = FALSE, col.names = TRUE)
+list.files(pattern=".*csv")
+```
+
+```{r write TSV}
+write.table(mtcars, file="mtcars.tsv", sep="\t", row.names = FALSE, col.names = TRUE)
+list.files(pattern="mtcars.*")
+```
+
+When working with very large datasets that can be slow to load it is sometimes useful to save R objects (such as data frames, or any other object) in its native (Rdata or RDS) format. The data can also be compressed. Such files load much faster than the corresponding text or Excel files.  
+
+```{r}
+saveRDS(object = mtcars, file = "mtcars.rds", compress = "bzip2")
+list.files(pattern="mtcars.*")
+```
+
+```{r}
+x <- readRDS(file = "mtcars.rds")
+print(x[,1:4])
+```
+
+## Summaries of data frames  
+```{r message=FALSE}
+str(OrchardSprays)
+```
+
+```{r}
+head(OrchardSprays)
+```
+
+
+```{r}
+str(df.results)
+```
+
+```{r}
+str(df.blueprint)
+```
+
+
+```{r}
+summary(OrchardSprays)
+```
+
+
+## Session info  
+```{r}
+sessionInfo()
+```
+
+
