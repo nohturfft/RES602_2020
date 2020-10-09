@@ -3,6 +3,9 @@ title: "Exploring R Graphics"
 output: html_notebook
 ---
 
+Useful resource:  
+An excellent resource for learning to generate graphics in R is the "[R Graphics Cookbook](https://r-graphics.org/)" by Winston Chang, which is freely available online.
+
 ```{r}
 if (! requireNamespace("ggplot2")) install.packages("ggplot2")
 library(ggplot2)
@@ -18,25 +21,63 @@ help(package="datasets")
 
 ## Scatterplot  
 ```{r}
-x <- iris
-head(x)
+iris.data <- iris
+head(iris.data)
 ```
 
 
 ```{r}
-ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) +
+gg1 <- ggplot(iris.data, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) +
   geom_point()
+gg1
 ```
 
 ```{r}
-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Species)) +
+gg2 <- ggplot(iris.data, aes(x=Petal.Length, y=Petal.Width, color=Species)) +
   geom_point()
+gg2
 ```
 
 
 ```{r}
-ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, color=Species)) +
+gg3 <- ggplot(iris.data, aes(x=Sepal.Length, y=Petal.Length, color=Species)) +
   geom_point() +
   stat_smooth(method = lm, level = 0.99)
+gg3
+```
+
+## Line graphs  
+Using base R:  
+```{r}
+p <- pressure
+# dim(p) # 19 2
+plot(pressure$temperature, pressure$pressure, type = "l")
+```
+
+Using ggplot2:  
+```{r}
+ggplot(pressure, aes(x = temperature, y = pressure)) +
+  geom_line()
+```
+
+```{r}
+ggplot(pressure, aes(x = temperature, y = pressure)) +
+  geom_line() +
+  geom_point()
+```
+
+## Bar graphs  
+```{r}
+help(BOD, package="datasets")
+b1 <- BOD
+ggplot(b1, aes(x = factor(Time), y = demand)) +
+  geom_col()
+```
+
+```{r}
+# head(mtcars)
+b2 <- table(mtcars$cyl) %>% as.data.frame() %>% set_colnames(c("Cylinders", "Count"))
+ggplot(b2, aes(x = Cylinders, y = Count)) +
+  geom_col()
 ```
 
