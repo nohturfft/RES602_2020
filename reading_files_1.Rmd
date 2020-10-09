@@ -3,11 +3,8 @@ title: "Creating, reading and writing data frames"
 author: "Axel Nohturfft (anohturf@sgul.ac.uk)"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '3'
   html_notebook:
-    code_folding: show
+    code_folding: "hide"
     fig_caption: yes
     highlight: tango
     number_sections: no
@@ -16,6 +13,13 @@ output:
     toc_depth: 3
     toc_float: no
 ---
+
+<style>
+h1 {background: darkblue; color: white; padding-left: 7px; font-weight: bold}
+h2 {color: pink;}
+h3 {font-weight: bold;}
+.code-folding-btn {display: none;}
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
