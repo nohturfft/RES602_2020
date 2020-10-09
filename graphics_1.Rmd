@@ -81,3 +81,24 @@ ggplot(b2, aes(x = Cylinders, y = Count)) +
   geom_col()
 ```
 
+## Histogram  
+```{r}
+hist(mtcars$mpg, breaks = 10)
+```
+
+```{r}
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram()
+```
+
+
+## Box-and-whisker plot  
+```{r}
+boxplot(len ~ supp, data = ToothGrowth)
+```
+
+```{r}
+ggplot(ToothGrowth, aes(x = supp, y = len)) +
+  geom_boxplot()
+```
+
