@@ -3,6 +3,9 @@ title: "Exploring R Graphics"
 output: html_notebook
 ---
 
+Github repository: https://github.com/nohturfft/RES602_2020  
+
+
 Useful resource:  
 An excellent resource for learning to generate graphics in R is the "[R Graphics Cookbook](https://r-graphics.org/)" by Winston Chang, which is freely available online.
 
@@ -45,6 +48,9 @@ gg3 <- ggplot(iris.data, aes(x=Sepal.Length, y=Petal.Length, color=Species)) +
   stat_smooth(method = lm, level = 0.99)
 gg3
 ```
+
+Practise scatterplot: BMS_1920_Marks.xlsx  
+
 
 ## Line graphs  
 Using base R:  
@@ -91,6 +97,7 @@ ggplot(mtcars, aes(x = mpg)) +
   geom_histogram()
 ```
 
+Practise histograms: BMS_1920_Marks.xlsx
 
 ## Box-and-whisker plot  
 ```{r}
