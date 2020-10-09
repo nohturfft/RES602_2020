@@ -21,6 +21,21 @@ In order to see a list of available datasets use the `help()` function as shown 
 help(package="datasets")
 ```
 
+```{r}
+ggplot(iris.data) +
+ aes(x = Sepal.Length, y = Petal.Length) +
+ geom_point(size = 5, colour = "brown")
+```
+
+```{r}
+ggplot(iris.data) +
+ aes(x = Sepal.Length, y = Petal.Length, colour = Species) +
+ geom_point(size = 2) +
+ scale_color_hue() +
+ labs(title = "Iris Plot") +
+ theme_minimal()
+```
+
 
 ## Scatterplot  
 ```{r}
@@ -56,8 +71,9 @@ Practise scatterplot: BMS_1920_Marks.xlsx
 Using base R:  
 ```{r}
 p <- pressure
+# View(p)
 # dim(p) # 19 2
-plot(pressure$temperature, pressure$pressure, type = "l")
+plot(p$temperature, p$pressure, type = "l")
 ```
 
 Using ggplot2:  
@@ -68,13 +84,13 @@ ggplot(pressure, aes(x = temperature, y = pressure)) +
 
 ```{r}
 ggplot(pressure, aes(x = temperature, y = pressure)) +
-  geom_line() +
-  geom_point()
+  geom_line(size=0.5, colour="green") +
+  geom_point(size=3, colour="blue")
 ```
 
 ## Bar graphs  
 ```{r}
-help(BOD, package="datasets")
+# help(BOD, package="datasets")
 b1 <- BOD
 ggplot(b1, aes(x = factor(Time), y = demand)) +
   geom_col()
@@ -107,5 +123,18 @@ boxplot(len ~ supp, data = ToothGrowth)
 ```{r}
 ggplot(ToothGrowth, aes(x = supp, y = len)) +
   geom_boxplot()
+```
+
+```{r}
+library(readxl)
+df <- read_excel("data/Example_Dataset_1.xlsx", 
+    skip = 3) %>% 
+  set_colnames(c("Treatment", "Conc"))
+```
+
+```{r}
+ggplot(df) +
+ aes(x = Treatment, y = `Conc`) +
+ geom_boxplot(fill = "#6dcd59")
 ```
 
