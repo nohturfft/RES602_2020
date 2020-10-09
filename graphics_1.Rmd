@@ -16,9 +16,10 @@ help(package="datasets")
 ```
 
 
-
+## Scatterplot  
 ```{r}
-head(iris)
+x <- iris
+head(x)
 ```
 
 
