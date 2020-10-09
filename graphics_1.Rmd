@@ -9,6 +9,13 @@ library(ggplot2)
 ```
 
 
+Base R comes with a number of built-in datasets that are useful to try out code, especially to develop graphics.  
+In order to see a list of available datasets use the `help()` function as shown below:  
+```{r}
+help(package="datasets")
+```
+
+
 
 ```{r}
 head(iris)
