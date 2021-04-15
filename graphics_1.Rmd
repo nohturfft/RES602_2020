@@ -3,32 +3,138 @@ title: "Exploring R Graphics"
 output: html_notebook
 ---
 
+Github repository: https://github.com/nohturfft/RES602_2020  
+
+
+Useful resource:  
+An excellent resource for learning to generate graphics in R is the "[R Graphics Cookbook](https://r-graphics.org/)" by Winston Chang, which is freely available online.
+
 ```{r}
 if (! requireNamespace("ggplot2")) install.packages("ggplot2")
 library(ggplot2)
 ```
 
 
+Base R comes with a number of built-in datasets that are useful to try out code, especially to develop graphics.  
+In order to see a list of available datasets use the `help()` function as shown below:  
+```{r}
+help(package="datasets")
+```
 
 ```{r}
-head(iris)
+ggplot(iris.data) +
+ aes(x = Sepal.Length, y = Petal.Length) +
+ geom_point(size = 5, colour = "brown")
+```
+
+```{r}
+ggplot(iris.data) +
+ aes(x = Sepal.Length, y = Petal.Length, colour = Species) +
+ geom_point(size = 2) +
+ scale_color_hue() +
+ labs(title = "Iris Plot") +
+ theme_minimal()
+```
+
+
+## Scatterplot  
+```{r}
+iris.data <- iris
+head(iris.data)
 ```
 
 
 ```{r}
-ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) +
+gg1 <- ggplot(iris.data, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) +
   geom_point()
+gg1
 ```
 
 ```{r}
-ggplot(iris, aes(x=Petal.Length, y=Petal.Width, color=Species)) +
+gg2 <- ggplot(iris.data, aes(x=Petal.Length, y=Petal.Width, color=Species)) +
   geom_point()
+gg2
 ```
 
 
 ```{r}
-ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, color=Species)) +
+gg3 <- ggplot(iris.data, aes(x=Sepal.Length, y=Petal.Length, color=Species)) +
   geom_point() +
   stat_smooth(method = lm, level = 0.99)
+gg3
+```
+
+Practise scatterplot: BMS_1920_Marks.xlsx  
+
+
+## Line graphs  
+Using base R:  
+```{r}
+p <- pressure
+# View(p)
+# dim(p) # 19 2
+plot(p$temperature, p$pressure, type = "l")
+```
+
+Using ggplot2:  
+```{r}
+ggplot(pressure, aes(x = temperature, y = pressure)) +
+  geom_line()
+```
+
+```{r}
+ggplot(pressure, aes(x = temperature, y = pressure)) +
+  geom_line(size=0.5, colour="green") +
+  geom_point(size=3, colour="blue")
+```
+
+## Bar graphs  
+```{r}
+# help(BOD, package="datasets")
+b1 <- BOD
+ggplot(b1, aes(x = factor(Time), y = demand)) +
+  geom_col()
+```
+
+```{r}
+# head(mtcars)
+b2 <- table(mtcars$cyl) %>% as.data.frame() %>% set_colnames(c("Cylinders", "Count"))
+ggplot(b2, aes(x = Cylinders, y = Count)) +
+  geom_col()
+```
+
+## Histogram  
+```{r}
+hist(mtcars$mpg, breaks = 10)
+```
+
+```{r}
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram()
+```
+
+Practise histograms: BMS_1920_Marks.xlsx
+
+## Box-and-whisker plot  
+```{r}
+boxplot(len ~ supp, data = ToothGrowth)
+```
+
+```{r}
+ggplot(ToothGrowth, aes(x = supp, y = len)) +
+  geom_boxplot()
+```
+
+```{r}
+library(readxl)
+df <- read_excel("data/Example_Dataset_1.xlsx", 
+    skip = 3) %>% 
+  set_colnames(c("Treatment", "Conc"))
+```
+
+```{r}
+ggplot(df) +
+ aes(x = Treatment, y = `Conc`) +
+ geom_boxplot(fill = "#6dcd59")
 ```
 
