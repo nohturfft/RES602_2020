@@ -14,7 +14,6 @@
 # General parameters / settings for a script should go at the top:
 #-------------------------------------------------------------------------------
 3 + 4
-options(stringsAsFactors = FALSE)
 
 #-------------------------------------------------------------------------------
 # Data formats: scalars and vectors
@@ -30,7 +29,12 @@ LETTERS
 month.abb
 month.name
 
+1:10
+
 # Vectors can be generated using the c() function:
+print("Hello")
+cat("Hello")
+help(package="base")
 c(14, 6, 2016)
 
 #-------------------------------------------------------------------------------
@@ -54,7 +58,7 @@ print(my.second.variable)
 v1 <- c(14, 6, 2016)
 
 # Just the variable is equivalent to 'print()'
-v1
+v1 # same as print(v1)
 
 # Output from 'cat()' has no row numbers:
 cat(v1)
@@ -80,6 +84,7 @@ seq(from=1, to=10, length.out=19)
 
 # Vector items can have names:
 print(v3)
+month.abb
 names(v3) <- month.abb
 print(v3)
 names(v3)
@@ -89,17 +94,25 @@ names(v3)
 #-------------------------------------------------------------------------------
 # You can select items from within a vector using square brackets + indices ...
 # A single index number...
+LETTERS
 LETTERS[10]
 # ... or a vector of numbers ...
+c(8,5,12,12,15)
 LETTERS[c(8,5,12,12,15)]
 
 # You can also refer to vector items by name, if defined ...
 v3
+v3[11]
 v3["Nov"]
 # Using a vector of names:
+c("Jan", "Mar")
+v3[c(1,3)]
 v3[c("Jan", "Mar")]
 # ... or using boolean/logical values (TRUE/FALSE):
+v4 <- 1:3
+v4
 (v4 <- 1:3)
+c(TRUE, FALSE, TRUE)
 v4[c(TRUE, FALSE, TRUE)]
 
 #-------------------------------------------------------------------------------
@@ -110,8 +123,12 @@ v4[c(TRUE, FALSE, TRUE)]
 10 > 2
 2 > 10
 3 == 3.0
+4 == 5
 # The following generates a vector of boolean values:
+1:10
+1:10 >= 5
 v5 <- 1:10 >= 5
+v5
 names(v5) <- 1:10
 print(v5)
 
@@ -127,6 +144,7 @@ typeof(1.2)
 # Matrices are 2-dimensional arrays/tables where each item (cell) has to be of
 # the same data type:
 #-------------------------------------------------------------------------------
+1:24
 mx1 <- matrix(1:24, ncol=6)
 mx1
 
@@ -146,8 +164,9 @@ print(v3)
 v3 * 100
 
 print(mx1)
+mx1
 mx1 + 1000
-
+mx1
 t(mx1)
 
 #-------------------------------------------------------------------------------
@@ -218,7 +237,7 @@ df1[b, c]
 # Packages extend the basic repertoire of R with new functions.
 # There are three main depositories for R packages: CRAN, Bioconductor and github
 # Packages from CRAN are installed as follows, e.g.:
-install.packages("magrittr")
+# install.packages("magrittr")
 
 # To install a package from Bioconductor, find the package's page through a
 # Google search or at http://bioconductor.org;
@@ -237,6 +256,8 @@ install.packages("magrittr")
 #-------------------------------------------------------------------------------
 # Getting help
 #-------------------------------------------------------------------------------
+median(c(1:3, 100, 1000))
+
 # (1) To get help on a specific function the first option usually is to use the
 #     'Help' tab in RStudio
 
